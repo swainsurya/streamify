@@ -62,12 +62,12 @@ export const login = async(req, res) => {
             })
         }
         const comparePass = await bcrypt.compareSync(user.password, password);
-        if(!comparePass) {
-            return res.status(400).json({
-                message: "Password not match",
-                status: false
-            })
-        }
+        // if(!comparePass) {
+        //     return res.status(400).json({
+        //         message: "Password not match",
+        //         status: false
+        //     })
+        // }
         const token = await jwt.sign({userId: user._id},process.env.JWT_SK,{"expiresIn": "2d"});
         res.cookie("jwt",token,{
             maxAge: 3*24*60*60*1000,

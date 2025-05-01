@@ -1,10 +1,16 @@
 import express from "express"
-import "dotenv/config"
 import { connectDB } from "./api/utils/coonectDB.js";
+import cookieParser from "cookie-parser";
+import userRouter from "./api/routes/user.routes.js";
+import "dotenv/config"
 
 const app = express();
 const port = process.env.PORT || 4000 ;
 
+app.use(express.json());
+app.use(cookieParser());
+
+app.use("/auth",userRouter);
 
 app.get("/",(req, res) => {
     res.json({

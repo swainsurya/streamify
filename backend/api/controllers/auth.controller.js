@@ -90,4 +90,9 @@ export const login = async(req, res) => {
     }
 }
 
-// logout is handled by client side
+export const logout = async(req, res) => {
+    await res.clearCookie("jwt");
+    return res.json({
+        message: "logout success"
+    })
+}

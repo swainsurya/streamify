@@ -1,6 +1,7 @@
 import { userModel } from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { upsertStreamUser } from "../utils/stream.js";
 
 export const register = async(req,res) => {
     const {email,password,fullname} = req.body;
@@ -26,6 +27,20 @@ export const register = async(req,res) => {
 
         const newuser = new userModel({email,password: hashedPass,fullname,profilePic:randomAvatar});
         await newuser.save();
+
+        // save user to stream platform 
+        
+        try {
+            await upsertStreamUser({
+                id: newuser._id,
+                fullname: newuser.fullname,
+                image: newuser.profilePic
+            });
+            console.log("Stream user created for ", newuser.fullname);
+        } catch (error) {
+            console.log(error);
+        }
+
         return res.status(200).json({
             message: "Registration Success",
             status: true,
@@ -95,4 +110,8 @@ export const logout = async(req, res) => {
     return res.json({
         message: "logout success"
     })
+}
+
+export const onboard = async(req, res) => {
+    
 }
